@@ -17,7 +17,7 @@ func (b *Bucket) GetBucket(name string) (*Bucket, error) {
 	dir := filepath.Join(b.dir, name)
 	fs := b.pool.Get()
 	defer b.pool.Put(fs)
-	err := fs.MkdirAll(dir, 0777)
+	err := fs.MkdirAll(dir, 0755)
 
 	if err != nil {
 		return nil, err
@@ -38,7 +38,7 @@ func (b *Bucket) Set(key string, value []byte) error {
 
 	defer l.unlock(fs)
 
-	return afero.WriteFile(fs, fileName, value, 0777)
+	return afero.WriteFile(fs, fileName, value, 0755)
 }
 
 func (b *Bucket) Get(key string) ([]byte, error) {

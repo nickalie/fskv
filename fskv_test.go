@@ -160,8 +160,9 @@ func TestScanStop(t *testing.T) {
 func TestBucketInvalidName(t *testing.T) {
 	db, err := NewFSKV("data")
 	assert.Nil(t, err)
-	_, err = db.GetBucket(":;\n")
+	b, err := db.GetBucket("*\000,:;&&")
 	assert.NotNil(t, err)
+	assert.Nil(t, b)
 }
 
 func TestSetLocked(t *testing.T) {
@@ -191,7 +192,7 @@ func TestRemoveLocked(t *testing.T) {
 func TestSetInvalidName(t *testing.T) {
 	db, err := NewFSKV("data")
 	assert.Nil(t, err)
-	err = db.Set(":;\n", []byte(randString(20)))
+	err = db.Set("*\000,:;&&", []byte(randString(20)))
 	assert.NotNil(t, err)
 }
 

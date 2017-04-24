@@ -32,7 +32,7 @@ func NewFSKVWithFactory(f func() interface{}) (*FSKV, error) {
 
 	fs := p.Get()
 	defer p.Put(fs)
-	fs.MkdirAll("", 0777)
+	fs.MkdirAll("", 0755)
 	return &FSKV{&Bucket{dir: "", pool: p}}, nil
 }
 
