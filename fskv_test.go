@@ -9,7 +9,7 @@ import (
 )
 
 func TestSet(t *testing.T) {
-	db, err := NewFSKV("data")
+	db, err := Open("data")
 	assert.Nil(t, err)
 	err = db.Set(randString(10), []byte(randString(20)))
 	assert.Nil(t, err)
@@ -17,7 +17,7 @@ func TestSet(t *testing.T) {
 }
 
 func TestGetNotExists(t *testing.T) {
-	db, err := NewFSKV("data")
+	db, err := Open("data")
 	assert.Nil(t, err)
 	data, err := db.Get(randString(10))
 	assert.NotNil(t, err)
@@ -25,7 +25,7 @@ func TestGetNotExists(t *testing.T) {
 }
 
 func TestGet(t *testing.T) {
-	db, err := NewFSKV("data")
+	db, err := Open("data")
 	assert.Nil(t, err)
 	key := randString(10)
 	value := randString(20)
@@ -37,21 +37,21 @@ func TestGet(t *testing.T) {
 }
 
 func TestRemoveNotExists(t *testing.T) {
-	db, err := NewFSKV("data")
+	db, err := Open("data")
 	assert.Nil(t, err)
 	err = db.Remove(randString(10))
 	assert.Nil(t, err)
 }
 
 func TestRemoveAll(t *testing.T) {
-	db, err := NewFSKV("data")
+	db, err := Open("data")
 	assert.Nil(t, err)
 	err = db.Remove()
 	assert.Nil(t, err)
 }
 
 func TestRemove(t *testing.T) {
-	db, err := NewFSKV("data")
+	db, err := Open("data")
 	assert.Nil(t, err)
 	key := randString(10)
 	err = db.Set(key, []byte(randString(20)))
@@ -67,7 +67,7 @@ func TestRemove(t *testing.T) {
 }
 
 func TestGetBucket(t *testing.T) {
-	db, err := NewFSKV("data")
+	db, err := Open("data")
 	assert.Nil(t, err)
 	b, err := db.GetBucket(randString(10))
 	assert.Nil(t, err)
@@ -78,7 +78,7 @@ func TestGetBucket(t *testing.T) {
 }
 
 func TestScan(t *testing.T) {
-	db, err := NewFSKV(filepath.Join("data", randString(10)))
+	db, err := Open(filepath.Join("data", randString(10)))
 	assert.Nil(t, err)
 	data := make(map[string]string)
 	size := rand.Intn(10) + 10
@@ -104,7 +104,7 @@ func TestScan(t *testing.T) {
 
 func TestScanPrefix(t *testing.T) {
 	prefix := randString(5)
-	db, err := NewFSKV(filepath.Join("data", randString(10)))
+	db, err := Open(filepath.Join("data", randString(10)))
 	assert.Nil(t, err)
 	data := make(map[string]string)
 	size := rand.Intn(10) + 10
@@ -138,7 +138,7 @@ func TestScanPrefix(t *testing.T) {
 }
 
 func TestScanStop(t *testing.T) {
-	db, err := NewFSKV(filepath.Join("data", randString(10)))
+	db, err := Open(filepath.Join("data", randString(10)))
 	assert.Nil(t, err)
 	size := rand.Intn(10) + 10
 
@@ -158,7 +158,7 @@ func TestScanStop(t *testing.T) {
 }
 
 func TestBucketInvalidName(t *testing.T) {
-	db, err := NewFSKV("data")
+	db, err := Open("data")
 	assert.Nil(t, err)
 	b, err := db.GetBucket("*\000,:;&&")
 	assert.NotNil(t, err)
@@ -166,7 +166,7 @@ func TestBucketInvalidName(t *testing.T) {
 }
 
 func TestSetLocked(t *testing.T) {
-	db, err := NewFSKV("data")
+	db, err := Open("data")
 	assert.Nil(t, err)
 	key := randString(10)
 	l, err := getLock(db.root.pool.Get(), key)
@@ -177,7 +177,7 @@ func TestSetLocked(t *testing.T) {
 }
 
 func TestRemoveLocked(t *testing.T) {
-	db, err := NewFSKV("data")
+	db, err := Open("data")
 	assert.Nil(t, err)
 	key := randString(10)
 	err = db.Set(key, []byte(randString(20)))
@@ -190,7 +190,7 @@ func TestRemoveLocked(t *testing.T) {
 }
 
 func TestSetInvalidName(t *testing.T) {
-	db, err := NewFSKV("data")
+	db, err := Open("data")
 	assert.Nil(t, err)
 	err = db.Set("*\000,:;&&", []byte(randString(20)))
 	assert.NotNil(t, err)

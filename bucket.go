@@ -8,11 +8,13 @@ import (
 	"strings"
 )
 
+//Bucket represents a collection of key/value pairs inside the storage.
 type Bucket struct {
 	dir  string
 	pool *pool
 }
 
+//GetBucket creates a new bucket if it doesn't already exist and returns a reference to it. Returns an error if the bucket name is invalid.
 func (b *Bucket) GetBucket(name string) (*Bucket, error) {
 	dir := filepath.Join(b.dir, name)
 	fs := b.pool.Get()
@@ -21,11 +23,12 @@ func (b *Bucket) GetBucket(name string) (*Bucket, error) {
 
 	if err != nil {
 		return nil, err
-	} else {
-		return &Bucket{dir: dir, pool: b.pool}, nil
 	}
+
+	return &Bucket{dir: dir, pool: b.pool}, nil
 }
 
+//Set sets the value for a key in the bucket. If the key exist then its previous value will be overwritten.
 func (b *Bucket) Set(key string, value []byte) error {
 	fileName := filepath.Join(b.dir, key)
 	fs := b.pool.Get()
@@ -41,6 +44,7 @@ func (b *Bucket) Set(key string, value []byte) error {
 	return afero.WriteFile(fs, fileName, value, 0755)
 }
 
+//Get retrieves the value for a key in the bucket. Returns an error value if the key does not exist.
 func (b *Bucket) Get(key string) ([]byte, error) {
 	fileName := filepath.Join(b.dir, key)
 	fs := b.pool.Get()
@@ -48,7 +52,8 @@ func (b *Bucket) Get(key string) ([]byte, error) {
 	return afero.ReadFile(fs, fileName)
 }
 
-func (b *Bucket) Scan(prefix string, f func(key string, value []byte) bool) {
+//Scan executes a function for each key/value pair in a bucket if key has prefix. If the provided function returns false then the iteration is stopped.
+func (b *Bucket) Scan(prefix string, fn func(key string, value []byte) bool) {
 	fs := b.pool.Get()
 	defer b.pool.Put(fs)
 
@@ -63,7 +68,7 @@ func (b *Bucket) Scan(prefix string, f func(key string, value []byte) bool) {
 			return err
 		}
 
-		result := f(info.Name(), value)
+		result := fn(info.Name(), value)
 
 		if !result {
 			return errors.New("Stop")
@@ -73,6 +78,7 @@ func (b *Bucket) Scan(prefix string, f func(key string, value []byte) bool) {
 	})
 }
 
+//Remove removes a key from the bucket. If the key does not exist then nothing is done. If no keys provided whole bucket will be removed.
 func (b *Bucket) Remove(keys ...string) error {
 	fs := b.pool.Get()
 	defer b.pool.Put(fs)

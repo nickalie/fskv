@@ -31,6 +31,6 @@ func getLock(fs afero.Fs, name string) (*lock, error) {
 	return &lock{file: lockFile}, nil
 }
 
-func (l *lock) unlock(fs afero.Fs) {
-	fs.RemoveAll(l.file)
+func (l *lock) unlock(fs afero.Fs) error {
+	return fs.RemoveAll(l.file)
 }
