@@ -53,10 +53,6 @@ func (b *Bucket) Scan(prefix string, f func(key string, value []byte) bool) {
 	defer b.pool.Put(fs)
 
 	afero.Walk(fs, b.dir, func(path string, info os.FileInfo, err error) error {
-		if info == nil {
-			return nil
-		}
-
 		if info.IsDir() || filepath.Ext(info.Name()) == ".lock" || !strings.HasPrefix(info.Name(), prefix) {
 			return nil
 		}
