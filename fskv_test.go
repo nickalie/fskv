@@ -5,6 +5,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"math/rand"
 	"time"
+	"path/filepath"
 )
 
 func TestSet(t *testing.T) {
@@ -63,6 +64,42 @@ func TestRemove(t *testing.T)  {
 	data, err = db.Get(key)
 	assert.NotNil(t, err)
 	assert.Nil(t, data)
+}
+
+func TestGetBucket(t *testing.T) {
+	db, err := NewFSKV("data")
+	assert.Nil(t, err)
+	b, err := db.GetBucket(randString(10))
+	assert.Nil(t, err)
+	b, err = b.GetBucket(randString(10))
+	assert.Nil(t, err)
+	err = b.Set(randString(10), []byte(randString(10)))
+	assert.Nil(t, err)
+}
+
+func TestScan(t *testing.T)  {
+	db, err := NewFSKV(filepath.Join("data", randString(10)))
+	assert.Nil(t, err)
+	data := make(map[string]string)
+	size := rand.Intn(10) + 10
+
+	for i := 0; i < size; i++ {
+		key := randString(10)
+		value := randString(100)
+		data[key] = value
+		err := db.Set(key, []byte(value))
+		assert.Nil(t, err)
+	}
+
+	count := 0
+
+	db.Scan("", func(key string, value []byte) bool {
+		count++
+		assert.Equal(t, data[key], string(value))
+		return true
+	})
+
+	assert.Equal(t, size, count)
 }
 
 func init() {
