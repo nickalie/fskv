@@ -4,6 +4,7 @@
 [![](https://circleci.com/gh/nickalie/fskv.png?circle-token=4e9ad77c8463b3a34502ea66d47d35d22bd5eb65)](https://circleci.com/gh/nickalie/fskv)
 [![codecov](https://codecov.io/gh/nickalie/fskv/branch/master/graph/badge.svg)](https://codecov.io/gh/nickalie/fskv)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b631fcdb519c4ff3b998732e6d8f64d9)](https://www.codacy.com/app/nickalie/fskv?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nickalie/fskv&amp;utm_campaign=Badge_Grade)
+[![Go Report Card](https://goreportcard.com/badge/github.com/nickalie/fskv)](https://goreportcard.com/report/github.com/nickalie/fskv)
 
 ## Install
 
