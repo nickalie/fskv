@@ -1,8 +1,8 @@
 package fskv
 
 import (
-	"github.com/spf13/afero"
 	"errors"
+	"github.com/spf13/afero"
 )
 
 type lock struct {

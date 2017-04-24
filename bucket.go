@@ -1,15 +1,15 @@
 package fskv
 
 import (
-	"github.com/spf13/afero"
-	"path/filepath"
-	"os"
-	"strings"
 	"errors"
+	"github.com/spf13/afero"
+	"os"
+	"path/filepath"
+	"strings"
 )
 
 type Bucket struct {
-	dir string
+	dir  string
 	pool *pool
 }
 

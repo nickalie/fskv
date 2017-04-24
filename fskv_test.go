@@ -1,11 +1,11 @@
 package fskv
 
 import (
-	"testing"
 	"github.com/stretchr/testify/assert"
 	"math/rand"
-	"time"
 	"path/filepath"
+	"testing"
+	"time"
 )
 
 func TestSet(t *testing.T) {
