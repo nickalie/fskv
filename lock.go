@@ -8,7 +8,8 @@ import (
 	"strconv"
 )
 
-var ErrLocked error = errors.New("Locked")
+// ErrLocked returned in case is key locked for modifications
+var ErrLocked = errors.New("Locked")
 
 type lock struct {
 	path string
