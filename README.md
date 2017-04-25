@@ -12,6 +12,8 @@
 
 ## Example of usage
 
+Storage is safe to be used in multi-thread and multi-process environments.
+
 ```go
 package main
 
