@@ -39,9 +39,14 @@ func (b *Bucket) Set(key string, value []byte) error {
 		return err
 	}
 
-	defer l.unlock(fs)
+	err = afero.WriteFile(fs, fileName, value, 0755)
 
-	return afero.WriteFile(fs, fileName, value, 0755)
+	if err != nil {
+		l.unlock(fs)
+		return err
+	}
+
+	return l.unlock(fs)
 }
 
 // Get retrieves the value for a key in the bucket. Returns an error value if the key does not exist.
@@ -93,15 +98,14 @@ func (b *Bucket) Remove(keys ...string) error {
 
 	for _, v := range keys {
 		v = filepath.Join(b.dir, v)
-
 		l, err := getLock(fs, v)
 
 		if err != nil {
 			return err
 		}
 
-		err = fs.RemoveAll(v)
 		l.unlock(fs)
+		err = fs.RemoveAll(v)
 
 		if err != nil {
 			return err
